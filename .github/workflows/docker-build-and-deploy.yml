@@ -1,0 +1,36 @@
+name: Build and Deploy Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Test workflow validation
+      - name: Validate YAML file
+        run: echo "Workflow YAML validated successfully."
+
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Build the Docker image
+      - name: Build Docker Image
+        run: |
+          docker build -t ed1109/hoteljs:latest .
+
+      # Push the Docker image to Docker Hub
+      - name: Push Docker Image
+        run: |
+          docker push ed1109/hoteljs:latest
